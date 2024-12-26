@@ -15,17 +15,16 @@ class LMC:
         self.instructions = {
             1: self.add,
             2: self.sub,
-            3: self.store,
-            5: self.load,
+            3: self.write_memory,
+            5: self.accum_read_in,
             6: self.branch,
             7: self.branch_zero,
             8: self.branch_positive,
-            901: self.porcodio,
-            902: self.porcamadona,
+            901: self.accum_read_in,
+            902: self.accum_add_out,
             0: self.halt
         }
 
-   
     def add_input(self, value):
         if value < self.MIN_INPUT or value > self.MAX_INPUT:
             raise Exception("Input out of bounds")
@@ -34,10 +33,6 @@ class LMC:
     def read_input(self):
         return self.input.pop(0)
     
-    def porcodio(self):
-        self.accumulatore = self.read_input(self)
-
-
     def add_output(self, value):
         if value < self.MIN_INPUT or value > self.MAX_INPUT:
             raise Exception("Output out of bounds")
@@ -45,8 +40,12 @@ class LMC:
 
     def read_output(self):
         return self.output.pop(0)
-    
-    def porcamadona(self):
+
+
+    def accum_read_in(self, address):
+        self.accumulatore = self.read_input(address)
+
+    def accum_add_out(self):
         self.add_output(self.accumulatore)
 
     def read_memory(self, adress):
@@ -54,9 +53,31 @@ class LMC:
             raise Exception("Memory out of bounds")
         return self.memory[adress]
 
-    def write_memory(self, adress, value):
+    def write_memory(self, adress):
         if adress >= self.MEMORY_MAX or adress < self.MEMORY_MIN:
             raise Exception("Memory out of bounds")
-        self.memory[adress] = value
+        self.memory[adress] = self.accumulatore
 
+    def branch(self, adress):
+        self.program_counter = adress
     
+    def branch_zero(self, adress):
+        if self.accumulatore == 0 & self.flag:
+            self.program_counter = adress
+    
+    def branch_positive(self, adress):
+        if self.flag:
+            self.program_counter = adress
+
+    def add(self, adress):
+        self.accumulatore += self.read_memory(adress) % 1000
+        if self.accumulatore >= 1000:
+            self.falg = True
+
+    def sub(self, adress):
+        self.accumulatore -= self.read_memory(adress) % 1000
+        if self.accumulatore >= 1000:
+            self.flag = True
+
+    def halt(self):
+        return
