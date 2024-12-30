@@ -1,12 +1,16 @@
 #SM3201419 Francesco Carollo
-import LMC_memory
-import LMC_queues 
+import LMC
+import Assembler
 
-print("Hello World!")
+def main():
+    assembler = Assembler.Assembler()
+    assembler.assemble("test_programs/counting.lmc")
+    machine_code = assembler.memory
+    lmc = LMC.LMC()
+    #lmc.input = [901, 902, 705, 600, 0, 4, 5, 6, 7, 8, 9, 0]
+    lmc.input = [42]
+    lmc.load_memory(machine_code)
+    lmc.run()
 
-# Read and write memory
-
-LMC_memory.write_memory(99, 42)
-print(LMC_memory.read_memory(99))
-LMC_queues.add_output(42)
-print(LMC_queues.read_output())
+if __name__ == "__main__":
+    main()
