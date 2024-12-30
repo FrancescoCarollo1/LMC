@@ -1,97 +1,96 @@
 #SM3201419 Francesco Carollo
 import sys
 
+VALUE_MIN = 0
+VALUE_MAX = 1000
+MEMORY_MIN = 0
+MEMORY_MAX = 100
+
 class LMC:
     def __init__(self):
-        self.MIN_INPUT = 0
-        self.MAX_INPUT = 999
+       
         self.input = []
         self.output = []
-        self.MEMORY_MIN = 0
-        self.MEMORY_MAX = 100
-        self.memory = [0] * self.MEMORY_MAX
+        self.memory = [0] * MEMORY_MAX
         self.accumulatore = 0
         self.program_counter = 0
         self.flag = False
         self.instructions = {
-            1: self.add,
-            2: self.sub,
-            3: self.write_memory,
-            5: self.accum_read_in,
-            6: self.branch,
-            7: self.branch_zero,
-            8: self.branch_positive,
-            901: self.accum_read_in,
-            902: self.accum_add_out,
-            0: self.halt
+            1: self.Addizione,
+            2: self.Sottrazione,
+            3: self.Store,
+            5: self.Load,
+            6: self.Branch,
+            7: self.Branch_if_zero,
+            8: self.Branch_if_positive,
+            9: self.Input_Output,
         }
     
+    def Addizione(self, address):
+        self.accumulatore += self.memory[address]
+        self.flag = self.accumulatore >= VALUE_MAX
+        self.accumulatore %= VALUE_MAX
+        
+        
+    def Sottrazione(self, address):
+        self.accumulatore -= self.memory[address]
+        self.flag = self.accumulatore <= VALUE_MIN
+        self.accumulatore %= VALUE_MAX
+        
+        
+    def Store(self, address):
+        self.memory[address] = self.accumulatore
+        
 
-    def add_input(self, value):
-        if value < self.MIN_INPUT or value > self.MAX_INPUT:
-            raise Exception("Input out of bounds")
-        self.input.append(value)
-        pass
+    def Load(self, address):
+        self.accumulatore = self.memory[address]
+        
 
-    def read_input(self):
-        return self.input.pop(0)
-        pass
+    def Branch(self, address):
+        self.program_counter = address
+        
     
-    def add_output(self, value):
-        if value < self.MIN_INPUT or value > self.MAX_INPUT:
-            raise Exception("Output out of bounds")
-        self.output.append(value)
-        pass
-
-    def read_output(self):
-        return self.output.pop(0)
-        pass
-
-    def accum_read_in(self, address):
-        self.accumulatore = self.read_input(address)
-        pass
-
-    def accum_add_out(self):
-        self.add_output(self.accumulatore)
-
-    def read_memory(self, adress):
-        if adress >= self.MEMORY_MAX or adress < self.MEMORY_MIN:
-            raise Exception("Memory out of bounds")
-        return self.memory[adress]
-        pass
-
-    def write_memory(self, adress):
-        if adress >= self.MEMORY_MAX or adress < self.MEMORY_MIN:
-            raise Exception("Memory out of bounds")
-        self.memory[adress] = self.accumulatore
-        pass
-
-    def branch(self, adress):
-        self.program_counter = adress
-        pass
+    def Branch_if_zero(self, address):
+        if self.accumulatore == 0 and not self.flag:
+            self.program_counter = address
+        
     
-    def branch_zero(self, adress):
-        if self.accumulatore == 0 & self.flag:
-            self.program_counter = adress
-        pass
-    
-    def branch_positive(self, adress):
-        if self.flag:
-            self.program_counter = adress
-        pass
+    def Branch_if_positive(self, address):
+        if not self.flag:
+            self.program_counter = address
+        
 
-    def add(self, adress):
-        self.accumulatore += self.read_memory(adress) % 1000
-        if self.accumulatore >= 1000:
-            self.falg = True
-        pass
+    def Input_Output(self, address):
+        if address == 1:
+            if VALUE_MIN >= self.input[0] or self.input[0] >= VALUE_MAX:
+                raise ValueError("Input out of range")
+            self.accumulatore = self.input.pop(0)
+        elif address == 2: 
+            self.output.append(self.accumulatore)
 
-    def sub(self, adress):
-        self.accumulatore -= self.read_memory(adress) % 1000
-        if self.accumulatore >= 1000:
-            self.flag = True
-        pass
+        else:
+            raise ValueError("Invalid instruction")
 
-    def halt(self):
-        exit(0)
-        pass
+    def load_memory(self, machine_code):
+        self.memory = machine_code
+
+    def run(self):
+        while True:
+            opcode = self.memory[self.program_counter] // 100
+            operand = self.memory[self.program_counter] % 100
+            print("Eseguendo istruzione: ", opcode, operand)
+            print(f"PC: {self.program_counter}, ACC: {self.accumulatore}, MEM: {self.memory}")
+            if opcode == 0:
+                break
+            pre = self.program_counter
+
+            self.instructions[opcode](operand)
+            
+            if pre == self.program_counter:
+                self.program_counter += 1
+                
+            self.program_counter %= MEMORY_MAX
+            
+            
+           
+        
