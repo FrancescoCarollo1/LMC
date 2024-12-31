@@ -1,17 +1,17 @@
-#SM3201419 Francesco Carollo
-import sys
+# Francesco Carollo SM3201419
 
+# Input and accumulator value range
 VALUE_MIN = 0
 VALUE_MAX = 1000
-MEMORY_MIN = 0
-MEMORY_MAX = 100
+
+MEM_SIZE = 100
 
 class LMC:
     def __init__(self):
        
         self.input = []
         self.output = []
-        self.memory = [0] * MEMORY_MAX
+        self.memory = [0] * MEM_SIZE
         self.accumulatore = 0
         self.program_counter = 0
         self.flag = False
@@ -26,6 +26,7 @@ class LMC:
             9: self.Input_Output
         }
     
+
     def Addizione(self, address):
         print(f"ADD: accumulatore <- {self.accumulatore}+{self.memory[address]}")        
         self.accumulatore += self.memory[address]
@@ -37,8 +38,7 @@ class LMC:
         self.accumulatore -= self.memory[address]
         self.flag = self.accumulatore < VALUE_MIN
         self.accumulatore %= VALUE_MAX
-        
-        
+            
     def Store(self, address):
         print(f"STA: mem[{address}] <- {self.accumulatore}")        
         self.memory[address] = self.accumulatore
@@ -47,19 +47,16 @@ class LMC:
         print(f"LDA: accumulatore <- {self.memory[address]}")
         self.accumulatore = self.memory[address]
         
-
     def Branch(self, address):
         print(f"BRA: program counter <- {address}")
         self.program_counter = address
-        
     
     def Branch_if_zero(self, address):
-
         if self.accumulatore == 0 and not self.flag:
             print(f"BRZ: program counter <- {address}")
             self.program_counter = address
         else:
-            print(f"BRZ: skipped")
+            print(f"BRZ: Continue")
         
     
     def Branch_if_positive(self, address):
@@ -67,43 +64,41 @@ class LMC:
             print(f"BRP: program counter <- {address}")
             self.program_counter = address
         else:
-            print(f"BRP: skipped")
+            print(f"BRP: Continue")
         
-
-    def Input_Output(self, address):
-        if address == 1:
+    # This function is used to handle both input and output
+    def Input_Output(self, operand):    
+        if operand == 1:
             print(f"INP: accumulatore <- {self.input[0]}")
             if VALUE_MIN > self.input[0] or self.input[0] >= VALUE_MAX:
                 raise ValueError("Input out of range")
             self.accumulatore = self.input.pop(0)
-        elif address == 2:
-            print(f"OUT <- {self.accumulatore}") 
+
+        elif operand == 2:
+            print(f"OUT: <- {self.accumulatore}") 
             self.output.append(self.accumulatore)
 
         else:
             raise ValueError("Invalid instruction")
         
 
-    def load_memory(self, machine_code):
-        self.memory = machine_code
-
     def run(self):
         while True:
-            opcode = self.memory[self.program_counter] // 100
-            operand = self.memory[self.program_counter] % 100
-            pre = self.program_counter
+            opcode = int(str(self.memory[self.program_counter])[:1])
             if opcode == 0:
                 break
 
-            if opcode == 4:
+            operand = int(str(self.memory[self.program_counter])[1:])
+            if opcode not in self.instructions:
                 raise ValueError("Invalid instruction")
 
-            self.instructions[opcode](operand)
+            self.program_counter += 1
+            self.program_counter %= MEM_SIZE
             
-            if pre == self.program_counter:
-                self.program_counter += 1
+            
+            self.instructions[opcode](operand)
                 
-            self.program_counter %= MEMORY_MAX
+
             
             
            
