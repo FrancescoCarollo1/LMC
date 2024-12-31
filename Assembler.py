@@ -1,4 +1,4 @@
-#SM3201419 Francesco Carollo
+# Francesco Carollo SM3201419
 
 class Assembler:
     def __init__(self):
@@ -16,7 +16,7 @@ class Assembler:
             "INP" : 901,
             "OUT" : 902,
             "HLT" : 0,
-            "COB" : 0,
+            "COB" : 0, #COFFEE BREAK https://en.wikipedia.org/wiki/Little_man_computer#Instructions   
             "DAT" : "",
         }
 
@@ -39,9 +39,10 @@ class Assembler:
 
                     self.lines.append(line)
 
-            # Replace labels with their corresponding memory addresse
-
+            # Second pass
             for i, line in enumerate(self.lines):
+
+                # Replace labels with their corresponding memory addresses
                 if len(line) == 2 and line[1] in self.labels:
                     line[1] = self.labels[line[1]]
 
