@@ -1,7 +1,4 @@
 # LMC
-
-Francesco Conti è Mooooolto Bravo
-
 progetto in python per il corso di Programmazione avanzata e parallela
 
 
