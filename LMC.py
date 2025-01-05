@@ -97,6 +97,21 @@ class LMC:
             
             
             self.instructions[opcode](operand)
+    
+    def run_generator(self):
+        while True:
+            opcode = int(str(self.memory[self.program_counter])[:1])
+            if opcode == 0:
+                break
+
+            operand = int(str(self.memory[self.program_counter])[1:])
+            if opcode not in self.instructions:
+                raise ValueError("Invalid instruction")
+
+            self.program_counter += 1
+            self.program_counter %= MEM_SIZE
+            
+            yield self.instructions[opcode](operand)
                 
 
             

@@ -9,10 +9,10 @@ def main():
     assembler = Assembler.Assembler()
     lmc = LMC.LMC()
     
-    lmc.memory = assembler.assemble("test_programs/counting.lmc")
-    lmc.input = [14] # Da scegliere in base a quale programma si vuole eseguire
-  
+    lmc.memory = assembler.assemble("test_programs/reverse.lmc")
+    lmc.input = [5, 10, 15, 0] # Da scegliere in base a quale programma si vuole eseguire
     lmc.run()
+ 
 
     print(len(lmc.output))
     print(lmc.output)
