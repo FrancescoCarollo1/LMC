@@ -87,10 +87,10 @@ class LMC:
             opcode = int(str(self.memory[self.program_counter])[:1])
             if opcode == 0:
                 break
-
-            operand = int(str(self.memory[self.program_counter])[1:])
             if opcode not in self.instructions:
                 raise ValueError("Invalid instruction")
+
+            operand = int(str(self.memory[self.program_counter])[1:])
 
             self.program_counter += 1
             self.program_counter %= MEM_SIZE
@@ -103,10 +103,10 @@ class LMC:
             opcode = int(str(self.memory[self.program_counter])[:1])
             if opcode == 0:
                 break
-
-            operand = int(str(self.memory[self.program_counter])[1:])
             if opcode not in self.instructions:
                 raise ValueError("Invalid instruction")
+
+            operand = int(str(self.memory[self.program_counter])[1:])
 
             self.program_counter += 1
             self.program_counter %= MEM_SIZE
