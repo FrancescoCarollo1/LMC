@@ -1,5 +1,8 @@
 # Francesco Carollo SM3201419
 
+import logging
+logger = logging.getLogger("LMC")
+
 # Input and accumulator value range
 VALUE_MIN = 0
 VALUE_MAX = 1000
@@ -28,61 +31,61 @@ class LMC:
     
 
     def Addizione(self, address):
-        print(f"ADD: accumulatore <- {self.accumulatore}+{self.memory[address]}")        
+        logger.debug(f"ADD: accumulatore <- {self.accumulatore}+{self.memory[address]}")        
         self.accumulatore += self.memory[address]
         self.flag = self.accumulatore >= VALUE_MAX
         self.accumulatore %= VALUE_MAX
         
     def Sottrazione(self, address):
-        print(f"SUB: accumulatore <- {self.accumulatore}-{self.memory[address]}")        
+        logger.debug(f"SUB: accumulatore <- {self.accumulatore}-{self.memory[address]}")        
         self.accumulatore -= self.memory[address]
         self.flag = self.accumulatore < VALUE_MIN
         self.accumulatore %= VALUE_MAX
             
     def Store(self, address):
-        print(f"STA: mem[{address}] <- {self.accumulatore}")        
+        logger.debug(f"STA: mem[{address}] <- {self.accumulatore}")        
         self.memory[address] = self.accumulatore
 
     def Load(self, address):
-        print(f"LDA: accumulatore <- {self.memory[address]}")
+        logger.debug(f"LDA: accumulatore <- {self.memory[address]}")
         self.accumulatore = self.memory[address]
         
     def Branch(self, address):
-        print(f"BRA: program counter <- {address}")
+        logger.debug(f"BRA: program counter <- {address}")
         self.program_counter = address
     
     def Branch_if_zero(self, address):
         if self.accumulatore == 0 and not self.flag:
-            print(f"BRZ: program counter <- {address}")
+            logger.debug(f"BRZ: program counter <- {address}")
             self.program_counter = address
         else:
-            print(f"BRZ: Continue")
+            logger.debug(f"BRZ: Continue")
         
     
     def Branch_if_positive(self, address):
         if not self.flag:
-            print(f"BRP: program counter <- {address}")
+            logger.debug(f"BRP: program counter <- {address}")
             self.program_counter = address
         else:
-            print(f"BRP: Continue")
+            logger.debug(f"BRP: Continue")
         
     #  Questa funzione gestisce sia Input che Output
     def Input_Output(self, operand):    
         if operand == 1:
-            print(f"INP: accumulatore <- {self.input[0]}")
+            logger.debug(f"INP: accumulatore <- {self.input[0]}")
             if VALUE_MIN > self.input[0] or self.input[0] >= VALUE_MAX:
                 raise ValueError("Input out of range")
             self.accumulatore = self.input.pop(0)
 
         elif operand == 2:
-            print(f"OUT: <- {self.accumulatore}") 
+            logger.debug(f"OUT: <- {self.accumulatore}") 
             self.output.append(self.accumulatore)
 
         else:
             raise ValueError("Invalid instruction")
         
 
-    def run(self):
+    def run(self, interactive):
         while True:
             opcode = int(str(self.memory[self.program_counter])[:1])
             if opcode == 0:
@@ -94,27 +97,9 @@ class LMC:
 
             self.program_counter += 1
             self.program_counter %= MEM_SIZE
-            
             
             self.instructions[opcode](operand)
-    
-    def run_generator(self):
-        while True:
-            opcode = int(str(self.memory[self.program_counter])[:1])
-            if opcode == 0:
-                break
-            if opcode not in self.instructions:
-                raise ValueError("Invalid instruction")
-
-            operand = int(str(self.memory[self.program_counter])[1:])
-
-            self.program_counter += 1
-            self.program_counter %= MEM_SIZE
-            
-            yield self.instructions[opcode](operand)
+            if interactive:
+                input("Press Enter to continue, press Ctrl+C to stop")
                 
-
-            
-            
-           
-        
+                
