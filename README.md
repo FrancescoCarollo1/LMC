@@ -1,5 +1,16 @@
 # LMC
-progetto in python per il corso di Programmazione avanzata e parallela
+### Breve introduzione
+Progetto in python per il corso di Programmazione avanzata e parallela.  
+Lo scopo del progetto è simulare l'esecuzione di un programma assembly per Little Man Computer (LMC).  
+Sono state implementate due classi: LMC ed Assembler.
+### Assembler
+Traduce il codice assembly in istruzioni interpretabili dal LMC.  
+È stata aggiunta l'istruzione ```COB``` (Coffee Break), che ha lo stesso significato di ```HLT``` e sebbene non sia utilizzata in nessun file di prova, è presente nella documentazione del LMC.  
+https://en.wikipedia.org/wiki/Little_man_computer#Instructions
+
+
+
+
 
 
 INPUT USATI PER FARE I TEST:
@@ -11,27 +22,3 @@ INPUT USATI PER FARE I TEST:
 - Reverse: `[5, 10, 15, 0]`
 - Squares: `[1, 2, 3, 4, 5, 0]`
 
-```python
-# Francesco Carollo SM3201419
-
-
-import LMC
-import Assembler
-
-def main():
-
-    assembler = Assembler.Assembler()
-    lmc = LMC.LMC()
-    
-    lmc.memory = assembler.assemble("test_programs/counting.lmc")
-    lmc.input = [14] # Da scegliere in base a quale programma si vuole eseguire
-  
-    lmc.run()
-
-    print(len(lmc.output))
-    print(lmc.output)
-
-if __name__ == "__main__":
-    main()
-
-```

@@ -66,7 +66,7 @@ class LMC:
         else:
             print(f"BRP: Continue")
         
-    # This function is used to handle both input and output
+    #  Questa funzione gestisce sia Input che Output
     def Input_Output(self, operand):    
         if operand == 1:
             print(f"INP: accumulatore <- {self.input[0]}")
