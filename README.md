@@ -47,7 +47,7 @@ python main.py test_programs/counting.lmc -- input 10 --interactive
 
 
 **Input utilizzati nei test:**
-- Counting: Input = `[10]`. 
+- Counting: `[10]`. 
 - Exec: `[901, 902, 705, 600, 0, 4, 5, 6, 7, 8, 9, 0]`.
 - Looping non richiede input.
 - Multiplication: `[6, 7]`.
