@@ -1,33 +1,60 @@
 # Francesco Carollo SM3201419
 
-
 import LMC
 import Assembler
 import argparse
-import logging
 import sys
+
+
+def test_program(program_filename, program_input, expected_output):
+    assembler = Assembler.Assembler()
+    lmc = LMC.LMC(False)
+
+    lmc.memory = assembler.assemble(program_filename)
+    lmc.input = program_input
+
+    try:
+        lmc.run()
+    except Exception as e: 
+        print(f'FAIL: {program_filename}\t\t{e}')
+        return
+
+    if lmc.output == expected_output:
+        print(f'PASS: {program_filename}')
+    else:
+        print(f'FAIL: {program_filename}\t\toutput: {lmc.output} != {expected_output}')
+
+
+def run_all_tests():
+    test_program("test_programs/counting.lmc",          [10],                                           [10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0])
+    test_program("test_programs/exec.lmc",              [901, 902, 705, 600, 0, 4, 5, 6, 7, 8, 9, 0],   [4, 5, 6, 7, 8, 9, 0])
+    test_program("test_programs/looping.lmc",           [],                                             list(range(0,100))*100)
+    test_program("test_programs/multiplication.lmc",    [6, 7],                                         [42])
+    test_program("test_programs/quine.lmc",             [],                                             [500, 902, 208, 708, 500, 108, 300, 600, 1])
+    test_program("test_programs/reverse.lmc",           [5, 10, 15, 0],                                 [15, 10, 5])
+    test_program("test_programs/squares.lmc",           [1, 2, 3, 4, 5, 0],                             [1, 4, 9, 16, 25])
+
 
 def main():
 
-    assembler = Assembler.Assembler()
-    lmc = LMC.LMC()
-    
+    if '--run-tests' in sys.argv: 
+        run_all_tests()
+        exit()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("filename", help="nome del file da eseguire")
     parser.add_argument("--input", help="input del programma" , type = int, nargs="*",  default = [])
     parser.add_argument("--interactive", help="modalità di esecuzione", action="store_true")
+    # --run-tests actually unused. bypassed by check above. here only for pretty help message
+    parser.add_argument("--run-tests", help="testa tutti i programmi e termina (risultati hard-coded)", action="store_true") 
     args = parser.parse_args()
+
+    assembler = Assembler.Assembler()
+    lmc = LMC.LMC(args.interactive)
 
     lmc.memory = assembler.assemble(args.filename)
     lmc.input = args.input
-
-    if  args.interactive:
-        logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format="%(message)s")
-    else:
-        logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(message)s")
-
-    lmc.run(args.interactive)    
-
+    lmc.run()    
     print("Output del programma: ", lmc.output)
 
 if __name__ == "__main__":

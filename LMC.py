@@ -1,5 +1,6 @@
 # Francesco Carollo SM3201419
 
+import sys
 import logging
 logger = logging.getLogger("LMC")
 
@@ -10,7 +11,7 @@ VALUE_MAX = 1000
 MEM_SIZE = 100
 
 class LMC:
-    def __init__(self):
+    def __init__(self, interactive):
        
         self.input = []
         self.output = []
@@ -28,7 +29,14 @@ class LMC:
             8: self.Branch_if_positive,
             9: self.Input_Output
         }
-    
+
+        self.interactive = interactive
+
+        if self.interactive:
+            logging.basicConfig(level=logging.DEBUG, stream=sys.stdout, format="%(message)s")
+        else:
+            logging.basicConfig(level=logging.INFO, stream=sys.stdout, format="%(message)s")
+        
 
     def Addizione(self, address):
         logger.debug(f"ADD: accumulatore <- {self.accumulatore}+{self.memory[address]}")        
@@ -85,7 +93,9 @@ class LMC:
             raise ValueError("Invalid instruction")
         
 
-    def run(self, interactive):
+    def run(self):
+        logger.debug("Press Enter to continue, press Ctrl+C to stop")
+
         while True:
             opcode = int(f'{self.memory[self.program_counter]:03d}'[:1])
             if opcode == 0:
@@ -99,7 +109,8 @@ class LMC:
             self.program_counter %= MEM_SIZE
             
             self.instructions[opcode](operand)
-            if interactive:
-                input("Press Enter to continue, press Ctrl+C to stop")
+            
+            if self.interactive:
+                input()
                 
                 
