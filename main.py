@@ -5,7 +5,7 @@ import Assembler
 import argparse
 import sys
 
-
+# Questa funzione controlla che il programma passato come argomento abbia l'output atteso
 def test_program(program_filename, program_input, expected_output):
     assembler = Assembler.Assembler()
     lmc = LMC.LMC(False)
@@ -15,7 +15,7 @@ def test_program(program_filename, program_input, expected_output):
 
     try:
         lmc.run()
-    except Exception as e: 
+    except ValueError as e: 
         print(f'FAIL: {program_filename}\t\t{e}')
         return
 
@@ -44,8 +44,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("filename", help="nome del file da eseguire")
     parser.add_argument("--input", help="input del programma" , type = int, nargs="*",  default = [])
-    parser.add_argument("--interactive", help="modalità di esecuzione", action="store_true")
-    # --run-tests actually unused. bypassed by check above. here only for pretty help message
+    parser.add_argument("--interactive", help="modalità di esecuzione: flag presente per esecuzione interattiva, assente per esecuzione normale", action="store_true")
+    # --run-tests è inutilizzato, controllato dall'if soprastante. Inserito per il messaggio di help
     parser.add_argument("--run-tests", help="testa tutti i programmi e termina (risultati hard-coded)", action="store_true") 
     args = parser.parse_args()
 

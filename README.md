@@ -22,9 +22,11 @@ Per eseguire correttamente il programma è necessario utilizzare il seguente for
 ```bash
 python main.py programma.lmc [--input num1 num2 ...] [--interactive]
 ```
+**flags**
 - *programma.lmc*: percorso al file con il programma assembly da eseguire.
 - *--input*: (opzionale) specifica una sequenza di valori numerici come input per il programma.
-- *--interactive*: (opzionale) flag che abilita l'esecuzione step by step.  
+- *--interactive*: (opzionale) abilita l'esecuzione step by step. 
+- *--run-tests*: (opzionale) controlla che tutti i programmi eseguiti con gli input forniti abbiano l'output atteso.  
 *Note*: 
 - assicurarsi che il percorso del file sia corretto.
 - secondo la sintassi di argparse, gli argomenti preceduti da "-" sono opzionali.  
@@ -51,14 +53,16 @@ python main.py test_programs/counting.lmc -- input 10 --interactive
 
 
 
+**Input e output dei vari programmi:**
 
+|Programma|Input|Output| 
+|:---:|:---:|:---:| 
+|Counting|[10]|[10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]|
+|Exec|[901, 902, 705, 600, 0, 4, 5, 6, 7, 8, 9, 0]|[4, 5, 6, 7, 8, 9, 0]|
+|Looping|No Input|list(range(0,100))*100|
+|Quine|No Input|[500, 902, 208, 708, 500, 108, 300, 600, 1]|
+|Multiplication|[6,7]|[42]|
+|Reverse|[5, 10, 15, 0]|[15, 10, 5]|
+|Squares|[1, 2, 3, 4, 5, 0]|[1, 4, 9, 16, 25]|
 
-**Input utilizzati nei test:**
-- Counting: `[10]`. 
-- Exec: `[901, 902, 705, 600, 0, 4, 5, 6, 7, 8, 9, 0]`.
-- Looping non richiede input.
-- Multiplication: `[6, 7]`.
-- Quine non richiede input.
-- Reverse: `[5, 10, 15, 0]`.
-- Squares: `[1, 2, 3, 4, 5, 0]`.
 
