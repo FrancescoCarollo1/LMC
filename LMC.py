@@ -87,13 +87,13 @@ class LMC:
 
     def run(self, interactive):
         while True:
-            opcode = int(str(self.memory[self.program_counter])[:1])
+            opcode = int(f'{self.memory[self.program_counter]:03d}'[:1])
             if opcode == 0:
                 break
             if opcode not in self.instructions:
                 raise ValueError("Invalid instruction")
 
-            operand = int(str(self.memory[self.program_counter])[1:])
+            operand = int(f'{self.memory[self.program_counter]:03d}'[1:])
 
             self.program_counter += 1
             self.program_counter %= MEM_SIZE

@@ -29,12 +29,19 @@ python main.py programma.lmc [--input num1 num2 ...] [--interactive]
 - assicurarsi che il percorso del file sia corretto.
 - secondo la sintassi di argparse, gli argomenti preceduti da "-" sono opzionali.  
 
-# Esempio di utilizzo
+# Esempi di utilizzo
 ### Esecuzione con flag disattivato
-
+**counting (input necessario)**
 ```bash
 python main.py test_programs/counting.lmc --input 10  
 ```
+
+**quine (input non necessario)**
+```bash
+python main.py test_programs/quine.lmc
+```
+
+
 ### Esecuzione con flag attivato
 ```bash
 python main.py test_programs/counting.lmc -- input 10 --interactive
