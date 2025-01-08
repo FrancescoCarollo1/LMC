@@ -15,7 +15,7 @@ def test_program(program_filename, program_input, expected_output):
 
     try:
         lmc.run()
-    except ValueError as e: 
+    except Exception as e: 
         print(f'FAIL: {program_filename}\t\t{e}')
         return
 
